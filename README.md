@@ -133,6 +133,7 @@ Run `openclaw doctor` to surface risky/misconfigured DM policies.
 - **[First-class tools](https://docs.openclaw.ai/tools)** — browser, canvas, nodes, cron, sessions, and Discord/Slack actions.
 - **[Companion apps](https://docs.openclaw.ai/platforms/macos)** — macOS menu bar app + iOS/Android [nodes](https://docs.openclaw.ai/nodes).
 - **[Onboarding](https://docs.openclaw.ai/start/wizard) + [skills](https://docs.openclaw.ai/tools/skills)** — wizard-driven setup with bundled/managed/workspace skills.
+- **[CEOClaw](skills/ceoclaw/)** — autonomous AI founder skill that researches markets, generates ideas, builds landing pages, deploys to Vercel, and tracks metrics.
 
 ## Star History
 
@@ -266,6 +267,71 @@ Details: [Session tools](https://docs.openclaw.ai/concepts/session-tool)
 ClawHub is a minimal skill registry. With ClawHub enabled, the agent can search for skills automatically and pull in new ones as needed.
 
 [ClawHub](https://clawhub.com)
+
+## Featured Skills
+
+### CEOClaw — Autonomous AI Founder
+
+**CEOClaw** is a comprehensive skill that teaches OpenClaw agents to autonomously start and operate internet businesses. It's a markdown-based skill that guides the agent through the complete entrepreneurship lifecycle:
+
+**8-Phase Business Workflow:**
+1. **Market Research** — Scrape Reddit, HackerNews, ProductHunt for user problems
+2. **Idea Generation** — Generate startup ideas using GPT-4 with demand scoring
+3. **Validation** — Analyze market signals and validate problem-solution fit
+4. **Landing Page Creation** — Build HTML pages with Tailwind CSS
+5. **Deployment** — Deploy to Vercel via API or CLI
+6. **Marketing** — Generate Twitter threads, blog posts, ProductHunt launches
+7. **Email Outreach** — SMTP campaigns with personalization and drip sequences
+8. **Metrics Tracking** — Google Analytics, Plausible, automated reporting
+
+**Quick Start:**
+
+```bash
+# Initialize CEOClaw database
+openclaw agent --message "Setup CEOClaw database schema"
+
+# Launch a business autonomously
+openclaw agent --message "Research developer productivity problems, generate 3 startup ideas, and deploy the best one to Vercel"
+
+# Check progress
+sqlite3 ~/.ceoclaw/data.db "SELECT name, tagline, demand_score FROM startup_ideas ORDER BY demand_score DESC LIMIT 5;"
+```
+
+**What Makes CEOClaw Unique:**
+
+- **Pure markdown guidance** — No source code; the agent reads documentation and executes workflows using built-in OpenClaw tools
+- **Real integrations** — Uses actual APIs (OpenAI, Vercel, SMTP, Reddit, HN Algolia)
+- **Safety-first** — Approval gates, cost limits, dry-run mode built-in
+- **SQLite persistence** — All business data (ideas, deployments, metrics) stored locally
+- **Complete automation** — From market research to revenue tracking
+
+**Location:** `skills/ceoclaw/`
+
+**Documentation:**
+- [CEOClaw README](skills/ceoclaw/README.md) — Complete overview
+- [Quick Start Guide](skills/ceoclaw/QUICKSTART.md) — 5-minute setup
+- [SKILL.md](skills/ceoclaw/SKILL.md) — Main skill definition
+- [Reference Guides](skills/ceoclaw/references/) — Detailed patterns for each phase
+
+**Example Prompts:**
+
+```bash
+# Research only
+openclaw agent --message "Research SaaS pain points on Reddit from the past month"
+
+# Full launch
+openclaw agent --message "Launch a business targeting remote workers. Focus on ideas under $100 budget."
+
+# Marketing focus
+openclaw agent --message "Create a Twitter thread and ProductHunt post for my deployed project at https://myapp.vercel.app"
+
+# Analytics review
+openclaw agent --message "Show me metrics for all deployed projects. Which ones have traction?"
+```
+
+CEOClaw demonstrates how OpenClaw skills can orchestrate complex, multi-step workflows entirely through markdown documentation and existing tools—no custom code required.
+
+---
 
 ## Chat commands
 
@@ -465,6 +531,9 @@ Use these when you’re past the onboarding flow and want the deeper reference.
 - [Templates: SOUL](https://docs.openclaw.ai/reference/templates/SOUL)
 - [Templates: TOOLS](https://docs.openclaw.ai/reference/templates/TOOLS)
 - [Templates: USER](https://docs.openclaw.ai/reference/templates/USER)
+
+**Example Skills:**
+- **[CEOClaw](skills/ceoclaw/)** — Autonomous business operations (market research, idea generation, deployment, marketing, metrics)
 
 ## Platform internals
 

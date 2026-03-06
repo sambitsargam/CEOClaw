@@ -1,0 +1,19 @@
+{
+  "businessGoal": "reach-first-customer",
+  "targetMarket": "software developers,devops engineers",
+  "budget": {
+    "maxMonthlySpend": 100
+  },
+  "approval": {
+    "requireForDeployments": true,
+    "requireForEmails": true,
+    "requireForPosts": true
+  },
+  "iterations": {
+    "maxCycles": 10,
+    "successCriteria": {
+      "signups": 10,
+      "revenue": 100
+    }
+  }
+}
