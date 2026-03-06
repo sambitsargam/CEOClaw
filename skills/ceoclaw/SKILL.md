@@ -6,9 +6,9 @@ metadata:
     "openclaw":
       {
         "emoji": "👔",
-        "requires": { "anyBins": ["curl", "node"], "env": ["OPENAI_API_KEY"] },
-        "homepage": "https://github.com/openclaw/openclaw/"
-      }
+        "requires": { "anyBins": ["curl", "node"] },
+        "homepage": "https://github.com/openclaw/openclaw/",
+      },
   }
 ---
 
@@ -19,12 +19,14 @@ Launch and operate small internet businesses autonomously through an 8-phase exe
 ## ⚠️ Safety & Approval Requirements
 
 This skill performs **real-world actions** with consequences:
+
 - Deploys live websites to the internet (Vercel)
 - Sends emails to real people (SMTP)
 - Posts marketing content publicly
 - Consumes API credits and spending
 
 **ALWAYS:**
+
 - Run in dry-run mode first to preview actions
 - Get explicit approval before live deployments
 - Review generated content before publishing
@@ -36,6 +38,7 @@ See `references/safety-guidelines.md` for complete guidelines.
 ## When to Use
 
 ✅ **Use CEOClaw for:**
+
 - Launching MVP products and testing startup ideas
 - Automating market research and validation
 - Building simple web products (landing pages, waitlists)
@@ -43,6 +46,7 @@ See `references/safety-guidelines.md` for complete guidelines.
 - Tracking early-stage metrics
 
 ❌ **Don't use for:**
+
 - Businesses requiring legal/compliance review
 - Handling sensitive user data
 - Large-scale enterprise operations
@@ -50,12 +54,14 @@ See `references/safety-guidelines.md` for complete guidelines.
 
 ## Prerequisites
 
-### Required Environment Variables
+### Required Configuration
+
+**LLM Provider:**  
+CEOClaw uses whatever AI model is configured in your OpenClaw setup (Anthropic Claude, OpenAI GPT-4, etc.). No additional API keys needed beyond your standard OpenClaw configuration.
+
+### Optional Environment Variables
 
 ```bash
-# Essential
-export OPENAI_API_KEY="sk-..."                    # GPT-4 for content generation
-
 # Deployment (at least one)
 export CEOCLAW_VERCEL_TOKEN="..."                 # Vercel API token
 # OR use Vercel CLI: npm i -g vercel && vercel login
@@ -87,27 +93,35 @@ export CEOCLAW_REDDIT_SECRET="..."                # Reddit API secret
 CEOClaw follows an 8-phase autonomous founder loop:
 
 ### Phase 1: Market Discovery
+
 Scrape Reddit, HackerNews, and ProductHunt for user problems and pain points.
 
-### Phase 2: Idea Generation  
+### Phase 2: Idea Generation
+
 Use GPT-4 to synthesize startup ideas from market signals with scoring and validation.
 
 ### Phase 3: Validation
+
 Check demand signals through keyword volume, community engagement, and existing solutions.
 
 ### Phase 4: Product Build
+
 Generate responsive landing pages with copy, design, and conversion elements.
 
 ### Phase 5: Deployment
+
 Deploy to Vercel (or other platforms) with custom domains and SSL.
 
 ### Phase 6: Marketing
+
 Create and distribute content across channels (blog, social, email, ads).
 
 ### Phase 7: User Outreach
+
 Send personalized emails to early adopters and potential customers.
 
 ### Phase 8: Analytics & Iteration
+
 Track metrics (visits, signups, conversions) and iterate based on data.
 
 ## Quick Start
@@ -172,6 +186,7 @@ echo "✅ Database initialized at ~/.openclaw/ceoclaw/ceoclaw.db"
 ### 2. Run Market Research
 
 Use references for detailed workflows:
+
 - See `references/market-research.md` for scraping patterns
 - See `references/api-integrations.md` for API authentication
 
@@ -212,9 +227,9 @@ All detailed workflows live in `{baseDir}/references/`:
 
 ```bash
 # Ask the agent:
-"Use CEOClaw to launch a business in the developer tools space. 
-Start with market research, generate 3 ideas, pick the best one, 
-build a landing page, deploy to Vercel, and set up email outreach. 
+"Use CEOClaw to launch a business in the developer tools space.
+Start with market research, generate 3 ideas, pick the best one,
+build a landing page, deploy to Vercel, and set up email outreach.
 Run in approval mode - ask before each deployment."
 ```
 
@@ -222,8 +237,8 @@ Run in approval mode - ask before each deployment."
 
 ```bash
 # Ask the agent:
-"Use CEOClaw to research SaaS problems on Reddit and HackerNews. 
-Focus on /r/SaaS, /r/startups, and HN 'Ask HN' posts from the last month. 
+"Use CEOClaw to research SaaS problems on Reddit and HackerNews.
+Focus on /r/SaaS, /r/startups, and HN 'Ask HN' posts from the last month.
 Store findings in the database and summarize the top 5 pain points."
 ```
 
@@ -232,13 +247,14 @@ Store findings in the database and summarize the top 5 pain points."
 ```bash
 # Ask the agent:
 "I have a startup idea: 'Email warm-up service for cold outreach'.
-Use CEOClaw to build a landing page, deploy it to Vercel, 
+Use CEOClaw to build a landing page, deploy it to Vercel,
 and create a Twitter thread announcing the launch."
 ```
 
 ## Workflow Orchestration
 
 For autonomous multi-phase execution, follow `references/business-workflow.md` which provides:
+
 - Phase sequencing and dependencies
 - Error handling and retries
 - Approval gates and dry-run modes
@@ -248,6 +264,7 @@ For autonomous multi-phase execution, follow `references/business-workflow.md` w
 ## Troubleshooting
 
 ### API Rate Limits
+
 - Reddit: 60 requests/minute (unauthenticated), 100/minute (authenticated)
 - HackerNews: No official limit, be respectful
 - OpenAI: Depends on tier (check dashboard)
@@ -256,21 +273,25 @@ For autonomous multi-phase execution, follow `references/business-workflow.md` w
 ### Common Issues
 
 **"Database locked"**: Close other SQLite connections
+
 ```bash
 fuser ~/.openclaw/ceoclaw/ceoclaw.db  # Check processes
 ```
 
 **"Vercel deployment failed"**: Check token permissions
+
 ```bash
 curl -H "Authorization: Bearer $CEOCLAW_VERCEL_TOKEN" \
   https://api.vercel.com/v2/user
 ```
 
 **"SMTP authentication failed"**: Use app-specific password (Gmail)
+
 - Gmail: https://myaccount.google.com/apppasswords
 - Must have 2FA enabled first
 
 **"Reddit API 429"**: Add authentication or slow down requests
+
 ```bash
 # Test Reddit auth
 curl -A "CEOClaw/1.0" -u "$CEOCLAW_REDDIT_CLIENT_ID:$CEOCLAW_REDDIT_SECRET" \
@@ -297,6 +318,7 @@ metrics(id, deployment_id, date, visits, signups, conversions, revenue)
 ```
 
 Query examples:
+
 ```bash
 # Top problems by engagement
 sqlite3 ~/.openclaw/ceoclaw/ceoclaw.db \
@@ -308,16 +330,16 @@ sqlite3 ~/.openclaw/ceoclaw/ceoclaw.db \
 
 # Deployment performance
 sqlite3 ~/.openclaw/ceoclaw/ceoclaw.db \
-  "SELECT d.url, SUM(m.visits) as total_visits 
-   FROM deployments d 
-   LEFT JOIN metrics m ON m.deployment_id = d.id 
+  "SELECT d.url, SUM(m.visits) as total_visits
+   FROM deployments d
+   LEFT JOIN metrics m ON m.deployment_id = d.id
    GROUP BY d.id"
 ```
 
 ## Best Practices
 
 1. **Always start with dry-run mode** to preview actions
-2. **Use test domains** for initial deployments (*.vercel.app)
+2. **Use test domains** for initial deployments (\*.vercel.app)
 3. **Review all generated content** before publishing
 4. **Monitor API costs** regularly (OpenAI, Vercel, SendGrid)
 5. **Test email templates** with your own address first
@@ -471,6 +493,7 @@ All data stored in: `~/.ceoclaw/`
 ## Ethics & Legal
 
 **Use Responsibly:**
+
 - Comply with CAN-SPAM Act (email)
 - Respect platform Terms of Service
 - Don't spam or harass users
@@ -483,16 +506,19 @@ All data stored in: `~/.ceoclaw/`
 ## Troubleshooting
 
 ### "Deployment failed"
+
 - Check Vercel token is valid
 - Ensure project has valid `vercel.json`
 - Verify no naming conflicts
 
 ### "Email sending failed"
+
 - Confirm SMTP credentials
 - Check recipient addresses are valid
 - Verify not rate-limited
 
 ### "No market signals found"
+
 - Try different search terms
 - Check API rate limits
 - Verify internet connection

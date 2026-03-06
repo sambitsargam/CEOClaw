@@ -18,6 +18,7 @@ CEOClaw is a **markdown-based skill** that teaches OpenClaw's AI agent how to ex
 ## How It Works
 
 Unlike traditional code implementations, CEOClaw provides **guidance documentation** that teaches the OpenClaw agent how to:
+
 - Use existing CLIs and APIs (curl, node, vercel, etc.)
 - Write bash scripts for automation
 - Call GPT-4 for content generation
@@ -51,12 +52,13 @@ skills/ceoclaw/
 
 ## Prerequisites
 
-### Environment Variables
+### LLM Configuration
+
+**Important:** CEOClaw uses whatever AI model is configured in your OpenClaw setup (Anthropic Claude, OpenAI GPT-4, Gemini, etc.). No additional API keys needed beyond your standard OpenClaw configuration.
+
+### Optional Environment Variables
 
 ```bash
-# Essential
-export OPENAI_API_KEY="sk-..."                    # GPT-4 for content generation
-
 # Deployment (choose one)
 export CEOCLAW_VERCEL_TOKEN="..."                 # Vercel API token
 # OR: npm i -g vercel && vercel login
@@ -121,8 +123,8 @@ openclaw agent --message "Use CEOClaw to launch a business in the developer tool
 ### Example 1: Market Research Only
 
 ```
-"Use CEOClaw to research SaaS problems on Reddit. 
-Focus on /r/SaaS and /r/startups from the last month. 
+"Use CEOClaw to research SaaS problems on Reddit.
+Focus on /r/SaaS and /r/startups from the last month.
 Store top 10 problems in the database."
 ```
 
@@ -168,21 +170,23 @@ All detailed workflows live in `references/`:
 ## Safety & Best Practices
 
 ### Always:
+
 ✅ Run in dry-run mode first to preview actions  
 ✅ Get approval before deployments, emails, and posts  
 ✅ Review all generated content before publishing  
 ✅ Start with test/staging environments  
 ✅ Monitor API costs and rate limits  
 ✅ Follow CAN-SPAM Act for email (include unsubscribe)  
-✅ Respect platform ToS (Reddit, HN rate limits)  
+✅ Respect platform ToS (Reddit, HN rate limits)
 
 ### Never:
+
 ❌ Deploy without testing locally first  
 ❌ Send emails to purchased lists  
 ❌ Scrape personal data without consent  
 ❌ Spam communities with promotional content  
 ❌ Ignore platform-specific posting rules  
-❌ Use aggressive or deceptive marketing  
+❌ Use aggressive or deceptive marketing
 
 ## How the Agent Uses This Skill
 
@@ -197,6 +201,7 @@ When you invoke CEOClaw, the OpenClaw agent:
 7. **Iterates** — Based on metrics and feedback
 
 The agent has access to:
+
 - `run_in_terminal` — Execute shell commands
 - `fetch_webpage` — HTTP requests
 - `create_file` — Generate scripts/content
@@ -268,13 +273,18 @@ CREATE TABLE metrics (
 
 ### Common Issues
 
-**"OPENAI_API_KEY not set"**
+**"No LLM configured"**
+
+CEOClaw uses your OpenClaw model configuration. Ensure you've set up authentication:
+
 ```bash
-export OPENAI_API_KEY="sk-..."
-# Or add to ~/.zshrc / ~/.bashrc
+openclaw configure --section model
+# OR
+openclaw config get agents.defaults.model.primary  # Check current config
 ```
 
 **"Database locked"**
+
 ```bash
 # Close other sqlite3 connections
 fuser ~/.openclaw/ceoclaw/ceoclaw.db
@@ -282,6 +292,7 @@ kill <pid>
 ```
 
 **"Vercel deployment failed"**
+
 ```bash
 # Verify token
 curl -H "Authorization: Bearer $CEOCLAW_VERCEL_TOKEN" \
@@ -289,6 +300,7 @@ curl -H "Authorization: Bearer $CEOCLAW_VERCEL_TOKEN" \
 ```
 
 **"Reddit 429 Too Many Requests"**
+
 ```bash
 # Add delays between requests
 sleep 2  # Between each request
@@ -296,6 +308,7 @@ sleep 2  # Between each request
 ```
 
 **"Emails going to spam"**
+
 - Use authenticated domain (not gmail.com)
 - Set up SPF, DKIM, DMARC records
 - Avoid spam trigger words
@@ -311,6 +324,7 @@ sleep 2  # Between each request
 ## Roadmap
 
 Future enhancements:
+
 - [ ] A/B testing automation
 - [ ] Payment integration (Stripe)
 - [ ] Customer support chatbot
@@ -331,6 +345,7 @@ Same as OpenClaw parent project (MIT).
 ## Credits
 
 CEOClaw is an OpenClaw skill that demonstrates autonomous task execution for business operations. It uses:
+
 - OpenAI GPT-4 for content generation
 - Vercel for hosting
 - Reddit/HN/ProductHunt for market research

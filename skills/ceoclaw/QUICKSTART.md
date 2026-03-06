@@ -7,7 +7,7 @@ Get your autonomous AI founder running in 5 minutes.
 CEOClaw is an OpenClaw skill that teaches AI agents to autonomously start and operate internet businesses. Unlike traditional tools, CEOClaw is **pure guidance** - markdown documentation that shows the agent how to use existing CLIs, APIs, and tools to:
 
 - Research market problems (Reddit, HackerNews, ProductHunt)
-- Generate startup ideas (OpenAI GPT-4)
+- Generate startup ideas (using your configured LLM)
 - Build landing pages (HTML generation)
 - Deploy projects (Vercel API)
 - Market products (Twitter, ProductHunt, email)
@@ -15,16 +15,18 @@ CEOClaw is an OpenClaw skill that teaches AI agents to autonomously start and op
 
 ## Prerequisites
 
-- OpenAI API key (for idea generation and content creation)
+- **OpenClaw with any LLM configured** (Anthropic Claude, OpenAI GPT-4, Gemini, etc.)
 - (Optional) Vercel account for deployments
 - (Optional) SMTP credentials for email outreach
 
-## Step 1: Set Up Your Environment
+## Step 1: Verify OpenClaw Configuration
 
-Get your OpenAI API key from https://platform.openai.com/api-keys
+CEOClaw uses whatever AI model is already configured in OpenClaw. No additional API keys needed!
+
+Check your OpenClaw setup:
 
 ```bash
-export OPENAI_API_KEY="sk-your-key-here"
+openclaw config get agents.defaults.model.primary
 ```
 
 Optional services:
@@ -142,7 +144,7 @@ Let's manually test market research to understand the workflow:
 # Research developer pain points on Reddit
 curl -H "User-Agent: CEOClaw/1.0" \
   "https://www.reddit.com/r/programming/search.json?q=frustrated+OR+pain+point+OR+waste+time&limit=50&sort=top&t=month" \
-  | jq -r '.data.children[] | select(.data.selftext != "") | 
+  | jq -r '.data.children[] | select(.data.selftext != "") |
     {
       title: .data.title,
       body: .data.selftext,
@@ -169,6 +171,7 @@ openclaw agent --message "Research productivity problems on HackerNews from the 
 ```
 
 The agent will:
+
 1. Read [SKILL.md](./SKILL.md) to understand the 8-phase workflow
 2. Follow [references/market-research.md](./references/market-research.md) to scrape data
 3. Use [references/idea-generation.md](./references/idea-generation.md) to create ideas
@@ -200,7 +203,7 @@ sqlite3 ~/.ceoclaw/data.db "SELECT s.name, m.type, m.platform, m.posted_at FROM 
 
 For a complete 8-phase autonomous business:
 
-```bash
+````bash
 # Copy the business workflow script
 curl -s https://raw.githubusercontent.com/openclaw/openclaw/main/skills/ceoclaw/references/business-workflow.md \
   | sed -n '/```bash/,/```/p' | sed '1d;$d' > /tmp/run-business.sh
@@ -212,7 +215,7 @@ DRY_RUN=true /tmp/run-business.sh
 
 # Run for real (⚠️ WARNING: Will spend money)
 /tmp/run-business.sh
-```
+````
 
 This script orchestrates all 8 phases with approval gates.
 
@@ -228,7 +231,7 @@ Or manually:
 
 ```bash
 sqlite3 ~/.ceoclaw/data.db "
-SELECT 
+SELECT
   s.name,
   d.url,
   SUM(m.visitors) as total_visitors,
@@ -248,26 +251,31 @@ ORDER BY total_visitors DESC;
 Here are effective ways to interact with CEOClaw:
 
 **Research Only:**
+
 ```bash
 openclaw agent --message "Research SaaS pain points on Reddit's r/SaaS and r/entrepreneur from the past 2 weeks. Store findings in the database."
 ```
 
 **Idea Generation:**
+
 ```bash
 openclaw agent --message "Generate 5 startup ideas for remote workers. Focus on ideas with low upfront cost (<$100) and clear monetization."
 ```
 
 **Full Launch:**
+
 ```bash
 openclaw agent --message "Launch a business: (1) Research developer tools pain points, (2) Generate 3 ideas, (3) Build landing page for best idea, (4) Deploy to Vercel, (5) Post to ProductHunt and Twitter. Ask for approval before deployments and posts."
 ```
 
 **Marketing Focus:**
+
 ```bash
 openclaw agent --message "For my deployed project at https://myapp.vercel.app, create a Twitter thread, blog post, and email outreach campaign to developers."
 ```
 
 **Metrics Review:**
+
 ```bash
 openclaw agent --message "Analyze metrics for all my projects. Which should I double down on? Which should I shut down?"
 ```
@@ -303,18 +311,24 @@ The agent reads these markdown files and executes the workflows using OpenClaw's
 
 ## Troubleshooting
 
-**"OPENAI_API_KEY not set":**
+**"No LLM configured" or "API key missing":**
+
+CEOClaw uses your OpenClaw configuration. Check your setup:
+
 ```bash
-export OPENAI_API_KEY="sk-..."
+openclaw config get agents.defaults.model.primary  # View current model
+openclaw configure --section model                 # Configure authentication
 ```
 
 **"Database locked":**
+
 ```bash
 # Another process is using it. Check:
 fuser ~/.ceoclaw/data.db
 ```
 
 **"Vercel deployment failed":**
+
 ```bash
 # Test Vercel token manually:
 curl -H "Authorization: Bearer $CEOCLAW_VERCEL_TOKEN" https://api.vercel.com/v9/projects
@@ -323,6 +337,7 @@ curl -H "Authorization: Bearer $CEOCLAW_VERCEL_TOKEN" https://api.vercel.com/v9/
 **"Agent doesn't invoke CEOClaw skill":**
 
 Make sure your prompt includes business/startup/entrepreneurship keywords. Try:
+
 ```bash
 openclaw agent --message "Use the CEOClaw skill to research market opportunities"
 ```
@@ -354,7 +369,7 @@ Track multiple projects:
 
 ```bash
 sqlite3 ~/.ceoclaw/data.db "
-SELECT 
+SELECT
   s.name,
   s.status,
   COUNT(DISTINCT d.id) as deployments,
@@ -426,7 +441,7 @@ $ npm run ceoclaw
 ℹ IdeaGenerator Generating 3 startup ideas from 25 market signals
 ✓ IdeaGenerator Generated 3 startup ideas
 ✓ 👔 CEOClaw Generated 3 ideas
-ℹ 👔 CEOClaw 
+ℹ 👔 CEOClaw
 🎯 Selected: DevLogger
    Beautiful, AI-powered logging for developers
   Demand Score: 87/100
